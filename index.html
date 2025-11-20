@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Safety Intervention GPT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 30px;
+            background: #f0fdf4;
+            border-bottom: 2px solid #d1fae5;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #10b981;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #6b7280;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1f2937;
+            font-size: 1.1em;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s;
+            min-height: 100px;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .examples {
+            margin: 30px 0;
+            padding: 25px;
+            background: #eff6ff;
+            border-radius: 12px;
+            border: 1px solid #bfdbfe;
+        }
+        
+        .examples h4 {
+            margin-bottom: 15px;
+            color: #1e40af;
+            font-size: 1.1em;
+        }
+        
+        .example-btn {
+            display: inline-block;
+            padding: 10px 18px;
+            margin: 5px;
+            background: white;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .example-btn:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            background: #f9fafb;
+            border-radius: 12px;
+            display: none;
+            border-left: 4px solid #10b981;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result h3 {
+            color: #065f46;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .result-content {
+            white-space: pre-wrap;
+            line-height: 1.8;
+            color: #374151;
+            font-size: 1em;
+        }
+        
+        .footer {
+            padding: 25px;
+            background: #f9fafb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9em;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .footer-links {
+            margin-top: 10px;
+        }
+        
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 Road Safety Intervention GPT</h1>
+            <p>AI-Powered Solution Recommender for Road Safety Engineers</p>
+            <div class="badge">Powered by FREE Groq AI ⚡</div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Interventions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">⚡ &lt;5s</div>
+                <div class="stat-label">Response Time</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">🎯 IRC</div>
+                <div class="stat-label">Compliant</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <label for="query">Describe Your Road Safety Issue:</label>
+                <textarea 
+                    id="query" 
+                    placeholder="Example: National Highway with frequent accidents at sharp curves during night time. Many two-wheelers lose control..."
+                ></textarea>
+            </div>
+            
+            <button class="button" onclick="askQuestion()" id="submitBtn">
+                🔍 Get AI Recommendations
+            </button>
+            
+            <div class="examples">
+                <h4>💡 Try these example queries:</h4>
+                <span class="example-btn" onclick="setQuery('Sharp curves causing accidents at night on National Highway')">🛣️ Curve Accidents</span>
+                <span class="example-btn" onclick="setQuery('Pedestrian accidents near school zone in urban area')">🏫 School Safety</span>
+                <span class="example-btn" onclick="setQuery('Speeding vehicles on residential roads causing safety concerns')">⚡ Speed Control</span>
+                <span class="example-btn" onclick="setQuery('Poor visibility at intersection during fog')">🌫️ Intersection Safety</span>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="color: #667eea; font-weight: 600; font-size: 1.1em;">
+                    🤖 AI is analyzing and generating recommendations...
+                </p>
+            </div>
+            
+            <div class="result" id="result">
+                <h3>✅ AI Recommendations:</h3>
+                <div class="result-content" id="resultContent"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>National Road Safety Hackathon 2025</strong> | IIT Madras</p>
+            <p style="margin-top: 5px;">Based on IRC Standards: 35, 67, 99, SP 84, SP 87</p>
+            <div class="footer-links">
+                <a href="#">GitHub</a> | 
+                <a href="#">Documentation</a> | 
+                <a href="#">About</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setQuery(text) {
+            document.getElementById('query').value = text;
+        }
+        
+        async function askQuestion() {
+            const query = document.getElementById('query').value.trim();
+            
+            if (!query) {
+                alert('⚠️ Please enter a road safety issue!');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('submitBtn').disabled = true;
+            
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: query })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('resultContent').textContent = data.response;
+                    document.getElementById('result').classList.add('show');
+                } else {
+                    alert('❌ Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('❌ Connection error: ' + error.message);
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('submitBtn').disabled = false;
+            }
+        }
+        
+        // Allow Enter key to submit
+        document.getElementById('query').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
